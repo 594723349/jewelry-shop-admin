@@ -1,0 +1,58 @@
+{
+  "id": "2336382",
+  "name": "文旅项目",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "文旅项目后台",
+  "glyphs": [
+    {
+      "icon_id": "1526019",
+      "name": "success",
+      "font_class": "success",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "432054",
+      "name": "table",
+      "font_class": "table",
+      "unicode": "e808",
+      "unicode_decimal": 59400
+    },
+    {
+      "icon_id": "689212",
+      "name": "表单 页面",
+      "font_class": "biaodanyemian",
+      "unicode": "e7cc",
+      "unicode_decimal": 59340
+    },
+    {
+      "icon_id": "742142",
+      "name": "组织管理",
+      "font_class": "zuzhiguanli",
+      "unicode": "ea72",
+      "unicode_decimal": 60018
+    },
+    {
+      "icon_id": "7436884",
+      "name": "report",
+      "font_class": "report",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "11982645",
+      "name": "Settings, control, options",
+      "font_class": "Settingscontroloptions",
+      "unicode": "e9cb",
+      "unicode_decimal": 59851
+    },
+    {
+      "icon_id": "12896522",
+      "name": "租户管理",
+      "font_class": "zuhuguanli",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    }
+  ]
+}
