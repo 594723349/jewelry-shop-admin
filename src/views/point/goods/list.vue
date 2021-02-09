@@ -25,8 +25,7 @@
 </template>
 
 <script>
-import tableMixins from '@/components/mixins/table';
-import editGoods from './modal/editGoods';
+import tableMixins from "@/components/mixins/table";
 export default {
   mixins: [tableMixins],
   components: {
@@ -37,40 +36,40 @@ export default {
       filters: {
         pageSize: 10,
         current: 1,
-        keyword: ''
+        keyword: ""
       },
       data: [],
       columns: [
         {
-          title: '商品名称',
-          dataIndex: 'name'
+          title: "商品名称",
+          dataIndex: "name"
         },
         {
-          title: '描述',
-          dataIndex: 'desc'
+          title: "描述",
+          dataIndex: "desc"
         },
         {
-          title: '积分',
-          dataIndex: 'point'
+          title: "积分",
+          dataIndex: "point"
         },
         {
-          title: '图片',
-          dataIndex: 'src',
-          scopedSlots: { customRender: 'src' },
+          title: "图片",
+          dataIndex: "src",
+          scopedSlots: { customRender: "src" },
           width: 100
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           width: 200,
-          scopedSlots: { customRender: 'action' },
+          scopedSlots: { customRender: "action" },
           operations: [
             {
-              text: '编辑',
+              text: "编辑",
               clickEvent: this.handleEdit
             },
             {
-              text: '删除',
+              text: "删除",
               clickEvent: this.handleDelete
             }
           ]
@@ -78,21 +77,21 @@ export default {
       ],
       toolbar: [
         {
-          fieldType: 'btn',
-          label: '添加',
+          fieldType: "btn",
+          label: "添加",
           on: this.handleAdd
         },
         {
-          key: 'delete',
-          fieldType: 'btn',
-          label: '删除',
+          key: "delete",
+          fieldType: "btn",
+          label: "删除",
           on: this.handleDelete,
           disabled: true
         },
         {
-          fieldType: 'search',
-          prop: 'keyword',
-          align: 'right'
+          fieldType: "search",
+          prop: "keyword",
+          align: "right"
         }
       ]
     };
@@ -102,34 +101,36 @@ export default {
   },
   methods: {
     getData() {
-      this.$store.commit('setLoading', true);
+      this.$store.commit("setLoading", true);
       this.$api.point.goods.list(this.filters).then(data => {
         this.setTotal(data.count);
         this.data = data.rows;
-        this.$store.commit('setLoading', false);
+        this.$store.commit("setLoading", false);
       });
     },
     handleAdd() {
       this.$refs.editGoods.open();
     },
     handleEdit(record) {
-      console.log(record);
-      this.$refs.editGoods.open(null, record);
+      this.$router.push({
+        name: "editPointGoods",
+        params: { id: record.id }
+      });
     },
     handleDelete(item) {
       this.$modal.confirm({
-        title: '删除',
-        content: '确认删除？',
+        title: "删除",
+        content: "确认删除？",
         onOk: () => {
           this.$api.point.goods.delete(this.getIds(item)).then(() => {
-            this.$message.success('删除成功');
+            this.$message.success("删除成功");
             this.reload();
           });
         }
       });
     },
     rowSelectionCb(selectedRowKeys, selectedRows) {
-      this.$refs.toolbar.disabled(['delete'], !selectedRows.length);
+      this.$refs.toolbar.disabled(["delete"], !selectedRows.length);
     }
   }
 };
