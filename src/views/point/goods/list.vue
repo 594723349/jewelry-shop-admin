@@ -19,8 +19,6 @@
         </div>
       </a-table>
     </div>
-
-    <editGoods ref="editGoods" @success="reload" />
   </div>
 </template>
 
@@ -28,35 +26,28 @@
 import tableMixins from "@/components/mixins/table";
 export default {
   mixins: [tableMixins],
-  components: {
-    editGoods
-  },
   data() {
     return {
       filters: {
         pageSize: 10,
         current: 1,
-        keyword: ""
+        keyword: "",
       },
       data: [],
       columns: [
         {
           title: "商品名称",
-          dataIndex: "name"
-        },
-        {
-          title: "描述",
-          dataIndex: "desc"
+          dataIndex: "name",
         },
         {
           title: "积分",
-          dataIndex: "point"
+          dataIndex: "point",
         },
         {
           title: "图片",
           dataIndex: "src",
           scopedSlots: { customRender: "src" },
-          width: 100
+          width: 100,
         },
         {
           title: "操作",
@@ -66,34 +57,34 @@ export default {
           operations: [
             {
               text: "编辑",
-              clickEvent: this.handleEdit
+              clickEvent: this.handleEdit,
             },
             {
               text: "删除",
-              clickEvent: this.handleDelete
-            }
-          ]
-        }
+              clickEvent: this.handleDelete,
+            },
+          ],
+        },
       ],
       toolbar: [
         {
           fieldType: "btn",
           label: "添加",
-          on: this.handleAdd
+          on: this.handleAdd,
         },
         {
           key: "delete",
           fieldType: "btn",
           label: "删除",
           on: this.handleDelete,
-          disabled: true
+          disabled: true,
         },
         {
           fieldType: "search",
           prop: "keyword",
-          align: "right"
-        }
-      ]
+          align: "right",
+        },
+      ],
     };
   },
   created() {
@@ -102,19 +93,21 @@ export default {
   methods: {
     getData() {
       this.$store.commit("setLoading", true);
-      this.$api.point.goods.list(this.filters).then(data => {
+      this.$api.point.goods.list(this.filters).then((data) => {
         this.setTotal(data.count);
         this.data = data.rows;
         this.$store.commit("setLoading", false);
       });
     },
     handleAdd() {
-      this.$refs.editGoods.open();
+      this.$router.push({
+        name: "editPointGoods",
+      });
     },
     handleEdit(record) {
       this.$router.push({
         name: "editPointGoods",
-        params: { id: record.id }
+        params: { id: record.id },
       });
     },
     handleDelete(item) {
@@ -126,13 +119,13 @@ export default {
             this.$message.success("删除成功");
             this.reload();
           });
-        }
+        },
       });
     },
     rowSelectionCb(selectedRowKeys, selectedRows) {
       this.$refs.toolbar.disabled(["delete"], !selectedRows.length);
-    }
-  }
+    },
+  },
 };
 </script>
 

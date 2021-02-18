@@ -2,9 +2,9 @@
  * @Description: 富文本编辑器
  * @Author: cxf
  * @Date: 2021-01-22 13:39:06
- * @LastEditTime: 2021-01-29 09:48:25
+ * @LastEditTime: 2021-02-18 15:55:39
  * @LastEditors: cxf
- * @FilePath: /score-ms/src/components/comm/editor/index.vue
+ * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/comm/editor/index.vue
 -->
 <template>
   <div class="c-editor">
@@ -65,8 +65,26 @@ export default {
       this.mergeConfig(this.config, editor);
       editor.config.placeholder = this.placeholder;
       editor.config.onchange = this.onChange;
+      editor.config.customUploadImg = this.customUpload;
       editor.create();
       this.editor = editor;
+    },
+    /**
+     * @description: 自定义上传
+     */
+    customUpload(files, insertImgFn) {
+      files.forEach(async (file) => {
+        const uploadParams = await this.$api.media.getUploadToken({
+          key: file.name,
+        });
+        const formData = new FormData();
+        formData.append("token", uploadParams.token);
+        formData.append("key", file.name);
+        formData.append("file", file);
+        this.$api.media.upload(uploadParams.uploadUrl, formData).then(async () => {
+          insertImgFn(uploadParams.src);
+        });
+      });
     },
     mergeConfig(config, editor = this.editor) {
       for (let k in config) {
