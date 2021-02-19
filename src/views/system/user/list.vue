@@ -19,35 +19,41 @@
         </div>
       </a-table>
     </div>
+    <editModal ref="editModal" @success="reload" />
   </div>
 </template>
 
 <script>
 import tableMixins from "@/components/mixins/table";
+import editModal from "./modal/edit";
 export default {
   mixins: [tableMixins],
+  components: {
+    editModal
+  },
   data() {
     return {
+      api: this.$api.system.user,
       filters: {
         pageSize: 10,
         current: 1,
-        keyword: "",
+        keyword: ""
       },
       data: [],
       columns: [
         {
-          title: "商品名称",
-          dataIndex: "name",
+          title: "用户名",
+          dataIndex: "username"
         },
         {
-          title: "积分",
-          dataIndex: "point",
+          title: "创建时间",
+          dataIndex: "createdAt",
+          customRender: value => this.formatTime(value)
         },
         {
-          title: "图片",
-          dataIndex: "src",
-          scopedSlots: { customRender: "src" },
-          width: 100,
+          title: "修改时间",
+          dataIndex: "updatedAt",
+          customRender: value => this.formatTime(value)
         },
         {
           title: "操作",
@@ -55,36 +61,36 @@ export default {
           width: 200,
           scopedSlots: { customRender: "action" },
           operations: [
-            {
-              text: "编辑",
-              clickEvent: this.handleEdit,
-            },
+            // {
+            //   text: "编辑",
+            //   clickEvent: this.handleEdit
+            // },
             {
               text: "删除",
-              clickEvent: this.handleDelete,
-            },
-          ],
-        },
+              clickEvent: this.handleDelete
+            }
+          ]
+        }
       ],
       toolbar: [
         {
           fieldType: "btn",
           label: "添加",
-          on: this.handleAdd,
+          on: this.handleAdd
         },
         {
           key: "delete",
           fieldType: "btn",
           label: "删除",
           on: this.handleDelete,
-          disabled: true,
+          disabled: true
         },
         {
           fieldType: "search",
           prop: "keyword",
-          align: "right",
-        },
-      ],
+          align: "right"
+        }
+      ]
     };
   },
   created() {
@@ -93,40 +99,34 @@ export default {
   methods: {
     getData() {
       this.$store.commit("setLoading", true);
-      this.$api.point.goods.list(this.filters).then((data) => {
+      this.api.list(this.filters).then(data => {
         this.setTotal(data.count);
         this.data = data.rows;
         this.$store.commit("setLoading", false);
       });
     },
     handleAdd() {
-      this.$router.push({
-        name: "editPointGoods",
-        params: { id: 0 },
-      });
+      this.$refs.editModal.open();
     },
     handleEdit(record) {
-      this.$router.push({
-        name: "editPointGoods",
-        params: { id: record.id },
-      });
+      this.$refs.editModal.open(null, record);
     },
     handleDelete(item) {
       this.$modal.confirm({
         title: "删除",
         content: "确认删除？",
         onOk: () => {
-          this.$api.point.goods.delete(this.getIds(item)).then(() => {
+          this.api.delete(this.getIds(item)).then(() => {
             this.$message.success("删除成功");
             this.reload();
           });
-        },
+        }
       });
     },
     rowSelectionCb(selectedRowKeys, selectedRows) {
       this.$refs.toolbar.disabled(["delete"], !selectedRows.length);
-    },
-  },
+    }
+  }
 };
 </script>
 

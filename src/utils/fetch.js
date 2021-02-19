@@ -1,7 +1,6 @@
 import axios from "axios";
 import Qs from "qs";
 import { message } from "ant-design-vue";
-import compose from "ramda/src/compose";
 import Router from "../router";
 import Store from "../store";
 const service = axios.create({
@@ -11,8 +10,8 @@ const service = axios.create({
 
 service.interceptors.request.use(
   (config) => {
-    const conf = config;
-    return conf;
+    config.headers.token = Store.state.token;
+    return config;
   },
   (error) => {
     message.error(error.message || "异常");
@@ -23,19 +22,14 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (response) => {
-    if (response.data.code === 0) {
+    const code = response.data.code;
+    if (code === 0) {
       return Promise.resolve(response.data.data);
     }
-    if (
-      response.data.message &&
-      response.data.message.indexOf("Subject does not have permission [videolist:list]") > -1
-    ) {
-      message.error("您还没有开通权限，请联系管理员。");
-      return Promise.reject(new Error(response.data));
-    }
     message.error(response.data.msg);
-    if (response.data.code === 30203) {
+    if (code === 10001 || code === 10002 || code === 10010) {
       Router.push({ path: "/" });
+      Store.dispatch("clearUserInfo");
     }
     Store.commit("setLoading", false);
     return Promise.reject(new Error(response.data));

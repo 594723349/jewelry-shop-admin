@@ -30,50 +30,49 @@
 </template>
 
 <script>
-import Utils from '@/utils/utils';
-import md5 from 'md5';
+import Utils from "@/utils/utils";
+import md5 from "md5";
 export default {
   data() {
     return {
       form: {
-        username: '',
-        password: '',
-        captcha: ''
+        username: "",
+        password: "",
+        captcha: "",
       },
-      captchaImg: '',
+      captchaImg: "",
       loading: false,
       rules: {
-        username: [{ required: true, message: '登录账号不允许为空!', trigger: 'change' }],
-        password: [{ required: true, message: '密码不允许为空!', trigger: 'change' }]
-      }
+        username: [{ required: true, message: "登录账号不允许为空!", trigger: "change" }],
+        password: [{ required: true, message: "密码不允许为空!", trigger: "change" }],
+      },
     };
   },
   methods: {
     login() {
       if (this.loading) return;
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          document.cookie = '';
+          document.cookie = "";
           this.loading = true;
           this.$api
             .login({
               username: this.form.username,
-              password: md5(this.form.password)
+              password: md5(this.form.password),
             })
-            .then(userInfo => {
-              this.$store.commit('setUserInfo', {
-                userInfo: userInfo.user
-              });
-              this.$router.push({ name: 'pointGoods' });
+            .then((userInfo) => {
+              this.$store.commit("setUserInfo", userInfo.userInfo);
+              this.$store.commit("setToken", userInfo.token);
+              this.$router.push({ name: "pointGoods" });
               this.loading = false;
             })
-            .catch(e => {
+            .catch((e) => {
               this.loading = false;
             });
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -113,7 +112,7 @@ export default {
     background-size: 46% auto, auto 100%;
     background-position: 10% 50%, top right; */
     background-color: #fff;
-    background-image: url('../assets/mlf_login-illustration.png');
+    background-image: url("../assets/mlf_login-illustration.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }

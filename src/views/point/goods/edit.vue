@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: cxf
  * @Date: 2021-02-09 11:27:16
- * @LastEditTime: 2021-02-18 16:15:33
+ * @LastEditTime: 2021-02-19 16:40:05
  * @LastEditors: cxf
  * @FilePath: /jewelry-shop/jewelry-shop-admin/src/views/point/goods/edit.vue
 -->
@@ -61,11 +61,12 @@ export default {
   },
   computed: {
     id() {
-      return this.$route.params.id;
+      const id = this.$route.params.id;
+      return id == 0 ? "" : id;
     },
   },
   created() {
-    this.getDetail();
+    this.id && this.getDetail();
   },
   methods: {
     getDetail() {
@@ -88,14 +89,18 @@ export default {
           }
           !value.order && (value.order = 1);
           value.src = this.Form.uploadUtil.getUrl("src")[0];
+          console.log(value);
           this.$api.point.goods
             .edit({
-              id: this.$route.params.id,
+              id: this.id,
               ...value,
             })
             .then(() => {
               this.$message.success("添加成功");
               this.cancel();
+              loading(false);
+            })
+            .catch(() => {
               loading(false);
             });
         }

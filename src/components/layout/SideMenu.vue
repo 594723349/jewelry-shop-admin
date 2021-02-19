@@ -1,13 +1,13 @@
 <!--
  * @Author: jiang chuyun
  * @Date: 2020-08-25 15:50:38
- * @LastEditTime: 2021-02-06 21:41:43
- * @LastEditors: chenxiaofan
+ * @LastEditTime: 2021-02-19 11:18:52
+ * @LastEditors: cxf
  * @Description:
- * @FilePath: \jewelry-shop\admin\src\components\layout\SideMenu.vue
+ * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/layout/SideMenu.vue
 -->
 <template>
-  <a-menu theme="light" mode="inline" style="border: none; background: #2b2b2b;">
+  <a-menu theme="dark" mode="inline" style="border: none; background: #2b2b2b;">
     <template v-for="item in menu">
       <a-sub-menu v-if="item.type == 0" :key="item.url" @click="clickMenu">
         <span slot="title" class="top-level-item">
@@ -28,21 +28,38 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 export default {
   components: {},
   data() {
     return {
       menu: [
         {
-          name: '积分管理',
+          name: "积分管理",
           type: 0,
-          url: 'point',
+          url: "point",
           subMenus: [
             {
-              name: '商品管理',
+              name: "计分商品管理",
               type: 1,
-              url: 'pointGoods'
+              url: "pointGoods"
+            }
+          ]
+        },
+        {
+          name: "门店管理",
+          type: 1,
+          url: "tenantList"
+        },
+        {
+          name: "系统管理",
+          type: 0,
+          url: "system",
+          subMenus: [
+            {
+              name: "用户管理",
+              type: 1,
+              url: "systemUserList"
             }
           ]
         }

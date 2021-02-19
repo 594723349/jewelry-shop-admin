@@ -2,10 +2,11 @@
  * @Description: 表格混入
  * @Author: cxf
  * @Date: 2020-11-12 19:07:58
- * @LastEditTime: 2021-02-09 02:10:55
- * @LastEditors: chenxiaofan
- * @FilePath: \jewelry-shop\admin\src\components\mixins\table.js
+ * @LastEditTime: 2021-02-19 11:41:43
+ * @LastEditors: cxf
+ * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/mixins/table.js
  */
+import { formatTime } from "@/utils/utils";
 export default {
   data() {
     return {
@@ -18,15 +19,15 @@ export default {
         total: 0,
         pageSize: 10,
         current: 1,
-        showTotal: total => `总共 ${total} 条`
+        showTotal: (total) => `总共 ${total} 条`,
       },
       rowSelection: {
         onChange: (selectedRowKeys, selectedRows) => {
           this.selectRowKeys = selectedRowKeys;
           this.selectRows = selectedRows;
           this.rowSelectionCb(selectedRowKeys, selectedRows);
-        }
-      }
+        },
+      },
     };
   },
   watch: {
@@ -34,13 +35,13 @@ export default {
       handler() {
         this.reload();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   computed: {
     loading() {
       return this.$store.state.loading;
-    }
+    },
   },
   methods: {
     getData() {},
@@ -105,6 +106,9 @@ export default {
       this.pagination = params;
       this.filters.current = params.current;
       // this.getData();
-    }
-  }
+    },
+    formatTime(value, format) {
+      return formatTime(value, format);
+    },
+  },
 };

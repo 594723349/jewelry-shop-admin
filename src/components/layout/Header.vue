@@ -1,10 +1,10 @@
 <!--
  * @Author: jiang chuyun
  * @Date: 2020-09-07 14:55:24
- * @LastEditTime: 2021-02-06 21:43:01
- * @LastEditors: chenxiaofan
+ * @LastEditTime: 2021-02-19 15:01:04
+ * @LastEditors: cxf
  * @Description: 总Header
- * @FilePath: \jewelry-shop\admin\src\components\layout\Header.vue
+ * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/layout/Header.vue
 -->
 <template>
   <a-layout-header class="layout-header">
@@ -21,12 +21,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       username: this.$store.state.userInfo.username,
-      avatar: '',
+      avatar: "",
       loading: false
     };
   },
@@ -36,7 +36,7 @@ export default {
      */
     logOut() {
       this.$api.logout().then(() => {
-        this.$router.push('/');
+        this.$router.push("/");
       });
     }
   }
