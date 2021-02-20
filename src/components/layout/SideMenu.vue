@@ -1,7 +1,7 @@
 <!--
  * @Author: jiang chuyun
  * @Date: 2020-08-25 15:50:38
- * @LastEditTime: 2021-02-19 11:18:52
+ * @LastEditTime: 2021-02-20 16:48:17
  * @LastEditors: cxf
  * @Description:
  * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/layout/SideMenu.vue
@@ -50,6 +50,11 @@ export default {
           name: "门店管理",
           type: 1,
           url: "tenantList"
+        },
+        {
+          name: "注册用户管理",
+          type: 1,
+          url: "registerUserList"
         },
         {
           name: "系统管理",

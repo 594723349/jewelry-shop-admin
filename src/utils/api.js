@@ -1,7 +1,7 @@
 /*
  * @Author: jiang chuyun
  * @Date: 2020-08-25 15:51:44
- * @LastEditTime: 2021-02-19 15:00:10
+ * @LastEditTime: 2021-02-20 16:50:01
  * @LastEditors: cxf
  * @Description:
  * @FilePath: /jewelry-shop/jewelry-shop-admin/src/utils/api.js
@@ -38,5 +38,10 @@ export default {
     getUploadToken: fetch.get("media/uploadToken"),
     upload: (url, data) => fetch.form(url)(data),
     getDetail: fetch.get("media/detail"),
+  },
+  registerUser: {
+    list: fetch.get("register/user/list"),
+    edit: (data) =>
+      data.id ? fetch.post("register/user/update")(data) : fetch.post("register/user/add")(data),
   },
 };

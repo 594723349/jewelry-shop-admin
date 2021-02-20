@@ -1,7 +1,7 @@
 /*
  * @Author: jiang chuyun
  * @Date: 2020-08-25 15:38:42
- * @LastEditTime: 2021-02-19 11:19:10
+ * @LastEditTime: 2021-02-20 16:46:33
  * @LastEditors: cxf
  * @Description:
  * @FilePath: /jewelry-shop/jewelry-shop-admin/src/router/index.js
@@ -12,6 +12,7 @@ import Login from "../views/Login.vue";
 import point from "./modules/point";
 import tenants from "./modules/tenants";
 import system from "./modules/system";
+import registerUser from "./modules/registerUser";
 import BasicLayout from "@/components/layout/BasicLayout.vue";
 Vue.use(VueRouter);
 //获取原型对象上的push函数
@@ -30,7 +31,7 @@ export const routes = [
   {
     path: "/view",
     component: BasicLayout,
-    children: [...point, ...tenants, ...system],
+    children: [...point, ...tenants, ...system, ...registerUser],
   },
 ];
 
