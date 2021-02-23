@@ -2,9 +2,9 @@
  * @Description: 配置用户
  * @Author: cxf
  * @Date: 2020-11-10 16:55:53
- * @LastEditTime: 2021-02-19 10:13:23
+ * @LastEditTime: 2021-02-23 16:32:29
  * @LastEditors: cxf
- * @FilePath: /jewelry-shop/jewelry-shop-admin/src/views/tenants/modal/edit.vue
+ * @FilePath: /jewelry-shop/jewelry-shop-admin/src/views/registerUser/modal/edit.vue
 -->
 <template>
   <div>
@@ -30,9 +30,10 @@ export default {
     return {
       formItems: [
         {
-          type: "input",
-          prop: "name",
-          label: "门店"
+          type: "radio",
+          prop: "role",
+          label: "角色",
+          data: []
         }
       ],
       Form: null
@@ -40,11 +41,24 @@ export default {
   },
   computed: {
     title() {
-      return this.values.id ? "编辑门店" : "新增门店";
+      return this.values.id ? "编辑用户" : "新增用户";
+    },
+    userInfo() {
+      return this.$store.state.userInfo;
     }
   },
   methods: {
     openCallback() {
+      this.formItems[0].data = [
+        {
+          label: "普通会员",
+          value: 0
+        },
+        {
+          label: "门店管理员",
+          value: this.userInfo.tenantId
+        }
+      ];
       this.$nextTick(() => {
         this.Form.setValue(this.values);
       });
@@ -55,7 +69,7 @@ export default {
     confirm() {
       this.Form.validate((err, value) => {
         if (!err) {
-          this.$api.tenant.edit(value).then(res => {
+          this.$api.registerUser.edit(value).then(res => {
             this.$emit("success");
             this.$message.success("操作成功");
             this.close();

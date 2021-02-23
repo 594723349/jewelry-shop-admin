@@ -2,7 +2,7 @@
  * @Description: 公共上传
  * @Author: cxf
  * @Date: 2020-12-31 13:41:25
- * @LastEditTime: 2021-02-18 16:14:59
+ * @LastEditTime: 2021-02-23 16:58:22
  * @LastEditors: cxf
  * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/comm/upload/index.vue
 -->
@@ -39,52 +39,52 @@ import priview from "@/components/comm/modal/preview.vue";
 export default {
   model: {
     prop: "value",
-    event: "change",
+    event: "change"
   },
   components: {
-    priview,
+    priview
   },
   props: {
     value: {
       type: [String, Array],
-      default: () => [],
+      default: () => []
     },
     accept: {
-      type: String,
+      type: String
     },
     placeholder: {
-      type: String,
+      type: String
     },
     width: {
       type: String,
-      default: "86px",
+      default: "86px"
     },
     height: {
       type: String,
-      default: "86px",
+      default: "86px"
     },
     listType: {
       type: String,
-      default: "picture-card",
+      default: "picture-card"
     },
     multiple: {
       type: Boolean,
-      default: false,
+      default: false
     },
     showUploadList: {
       type: Boolean,
-      default: true,
+      default: true
     },
     max: {
       type: Number,
-      default: 1,
+      default: 1
     },
     customRequest: {
-      type: Function,
+      type: Function
     },
     params: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   data() {
     return {
@@ -93,16 +93,16 @@ export default {
       uploadingFile: [],
       uploadNum: 0,
       previewVisible: "",
-      previewVisible: false,
+      previewVisible: false
     };
   },
   watch: {
     value(now) {
-      this.fileList = now.map((item) => {
+      this.fileList = now.map(item => {
         item.status = "done";
         return item;
       });
-    },
+    }
   },
   computed: {
     isMax() {
@@ -110,7 +110,7 @@ export default {
         return false;
       }
       return this.fileList.length >= this.max;
-    },
+    }
   },
   methods: {
     /**
@@ -126,21 +126,23 @@ export default {
     async handleCustomRequest({ file }) {
       const index = this.getCurrentIndex(file);
       const uploadParams = await this.$api.media.getUploadToken({
-        key: file.name,
+        key: file.name
       });
       const formData = new FormData();
       formData.append("token", uploadParams.token);
-      formData.append("key", file.name);
+      formData.append("key", uploadParams.fileName);
       formData.append("file", file);
-      this.$api.media.upload(uploadParams.uploadUrl, formData).then(async () => {
-        this.$set(this.fileList, index, {
-          uid: file.uid,
-          name: file.name,
-          status: "done",
-          url: uploadParams.src,
+      this.$api.media
+        .upload(uploadParams.uploadUrl, formData)
+        .then(async () => {
+          this.$set(this.fileList, index, {
+            uid: file.uid,
+            name: uploadParams.fileName,
+            status: "done",
+            url: uploadParams.src
+          });
+          this.handleChange();
         });
-        this.handleChange();
-      });
     },
     handleChange() {
       this.$emit("change", this.fileList);
@@ -196,8 +198,8 @@ export default {
      */
     submit() {
       this.$refs.upload.$el.querySelector("input").click();
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: jiang chuyun
  * @Date: 2020-08-25 15:50:38
- * @LastEditTime: 2021-02-20 16:48:17
+ * @LastEditTime: 2021-02-23 16:45:50
  * @LastEditors: cxf
  * @Description:
  * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/layout/SideMenu.vue
@@ -34,6 +34,23 @@ export default {
   data() {
     return {
       menu: [
+        // {
+        //   name: "商品管理",
+        //   type: 0,
+        //   url: "goods",
+        //   subMenus: [
+        //     {
+        //       name: "商品管理",
+        //       type: 1,
+        //       url: "goodsList"
+        //     },
+        //     {
+        //       name: "商品分类管理",
+        //       type: 1,
+        //       url: "goodsClassify"
+        //     }
+        //   ]
+        // },
         {
           name: "积分管理",
           type: 0,
