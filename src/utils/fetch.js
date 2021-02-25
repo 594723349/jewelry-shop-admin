@@ -32,7 +32,7 @@ service.interceptors.response.use(
       Store.dispatch("clearUserInfo");
     }
     Store.commit("setLoading", false);
-    return Promise.reject(new Error(response.data));
+    return Promise.reject(response.data);
   },
   (error) => Promise.reject(new Error({ code: -1, message: error })),
 );

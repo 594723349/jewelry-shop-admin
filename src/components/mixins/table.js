@@ -2,7 +2,7 @@
  * @Description: 表格混入
  * @Author: cxf
  * @Date: 2020-11-12 19:07:58
- * @LastEditTime: 2021-02-19 11:41:43
+ * @LastEditTime: 2021-02-24 15:25:29
  * @LastEditors: cxf
  * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/mixins/table.js
  */
@@ -46,6 +46,11 @@ export default {
   methods: {
     getData() {},
     reload() {
+      this.getData();
+    },
+    resetTable() {
+      this.filters.current = 1;
+      this.pagination.current = 1;
       this.getData();
     },
     /**
@@ -94,10 +99,6 @@ export default {
       this.selectRowKeys = [];
       this.rowSelectionCb(this.selectRowKeys, this.selectRows);
     },
-    reloadTable() {
-      this.$refs.table.getList();
-      this.clearSelected();
-    },
     /**
      * 分页切换
      * @param {Object} params
@@ -105,7 +106,6 @@ export default {
     changePage(params) {
       this.pagination = params;
       this.filters.current = params.current;
-      // this.getData();
     },
     formatTime(value, format) {
       return formatTime(value, format);

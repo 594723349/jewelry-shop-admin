@@ -2,7 +2,7 @@
  * @Description: 公共上传
  * @Author: cxf
  * @Date: 2020-12-31 13:41:25
- * @LastEditTime: 2021-02-23 16:58:22
+ * @LastEditTime: 2021-02-24 16:45:29
  * @LastEditors: cxf
  * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/comm/upload/index.vue
 -->
@@ -23,12 +23,14 @@
       :style="{ display: 'inline-block' }"
       @preview="handlePreview"
     >
-      <div class="upload-box" v-if="!isMax" :style="{ width: width, height: height }">
-        <div class="upload-area">
-          <a-icon :type="loading ? 'loading' : 'plus'" />
-          <div class="ant-upload-text">{{ placeholder }}</div>
+      <slot>
+        <div class="upload-box" v-if="!isMax" :style="{ width: width, height: height }">
+          <div class="upload-area">
+            <a-icon :type="loading ? 'loading' : 'plus'" />
+            <div class="ant-upload-text">{{ placeholder }}</div>
+          </div>
         </div>
-      </div>
+      </slot>
     </a-upload>
     <priview ref="priview" />
   </div>
@@ -124,24 +126,54 @@ export default {
      * @description: 自定义上传
      */
     async handleCustomRequest({ file }) {
-      const index = this.getCurrentIndex(file);
-      const uploadParams = await this.$api.media.getUploadToken({
-        key: file.name
-      });
-      const formData = new FormData();
-      formData.append("token", uploadParams.token);
-      formData.append("key", uploadParams.fileName);
-      formData.append("file", file);
-      this.$api.media
-        .upload(uploadParams.uploadUrl, formData)
-        .then(async () => {
-          this.$set(this.fileList, index, {
-            uid: file.uid,
-            name: uploadParams.fileName,
-            status: "done",
-            url: uploadParams.src
+      if (typeof this.customRequest === "function") {
+        this.custonUpload(file);
+      } else {
+        const index = this.getCurrentIndex(file);
+        const uploadParams = await this.$api.media.getUploadToken({
+          key: file.name
+        });
+        const formData = new FormData();
+        formData.append("token", uploadParams.token);
+        formData.append("key", uploadParams.fileName);
+        formData.append("file", file);
+        this.$api.media
+          .upload(uploadParams.uploadUrl, formData)
+          .then(async () => {
+            this.$set(this.fileList, index, {
+              uid: file.uid,
+              name: uploadParams.fileName,
+              status: "done",
+              url: uploadParams.src
+            });
+            this.handleChange();
           });
+      }
+    },
+    custonUpload(file) {
+      const params =
+        typeof this.params === "function" ? this.params() : this.params;
+      const index = this.getCurrentIndex(file);
+      this.customRequest(
+        {
+          file, // 当前上传的文件
+          fileList: this.fileList, // 已上传列表
+          params, // 请求参数
+          uploadNum: this.uploadingFile.length, // 当前上传的数量
+          index
+        },
+        this.setLoading
+      )
+        .then((res = {}) => {
+          this.uploadNum++;
           this.handleChange();
+          // 是否全部上传完成
+          if (this.uploadNum === this.uploadingFile.length) {
+            this.$emit("end", "success", res.data, params, this.fileList);
+          }
+        })
+        .catch(err => {
+          this.$emit("end", "error", err, params, this.fileList);
         });
     },
     handleChange() {

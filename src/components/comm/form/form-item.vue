@@ -2,9 +2,9 @@
  * @Description: 表单控件
  * @Author: cxf
  * @Date: 2020-01-21 17:58:42
- * @LastEditTime: 2021-02-08 22:30:31
- * @LastEditors: chenxiaofan
- * @FilePath: \jewelry-shop\admin\src\components\comm\form\form-item.vue
+ * @LastEditTime: 2021-02-25 14:56:23
+ * @LastEditors: cxf
+ * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/comm/form/form-item.vue
 -->
 
 <template>
@@ -34,8 +34,7 @@
             :size="btn.size"
             :loading="btn.loading"
             @click.prevent="handelClickBtn(btn)"
-            >{{ btn.label }}</a-button
-          >
+          >{{ btn.label }}</a-button>
         </div>
       </template>
       <!-- 纯文本 -->
@@ -66,8 +65,7 @@
             class="word-limt"
             :class="{ 'is-max': value.length >= formItem.maxLength }"
             slot="suffix"
-            >{{ value.length }}/{{ formItem.maxLength }}</span
-          >
+          >{{ value.length }}/{{ formItem.maxLength }}</span>
         </a-input>
         <div class="tips" v-if="formItem.tips" v-html="formItem.tips"></div>
       </template>
@@ -106,8 +104,7 @@
             v-for="(selectOption, optionIndex) in formItemData(formItem.data)"
             :key="optionIndex"
             :value="selectOption.value"
-            >{{ selectOption.label }}</a-select-option
-          >
+          >{{ selectOption.label }}</a-select-option>
         </a-select>
       </template>
       <!-- 复选框 -->
@@ -130,8 +127,7 @@
             v-for="(radioItem, radioItemIndex) in formItemData(formItem.data)"
             :key="radioItemIndex"
             :value="radioItem.value"
-            >{{ radioItem.label }}</a-radio
-          >
+          >{{ radioItem.label }}</a-radio>
         </a-radio-group>
       </template>
       <!-- 日期选择框 -->
@@ -223,19 +219,20 @@
 </template>
 
 <script>
-import { getDateFormat, isJSON, formatInputValue } from './util';
-import Moment from 'moment';
-import CEditor from '@/components/comm/editor/index';
-import CSelectMap from '@/components/comm/Map/SelectMap.vue';
-import CCity from '@/components/comm/city';
-import upload from '@/components/comm/upload/index';
+import { getDateFormat, isJSON, formatInputValue } from "./util";
+import Moment from "moment";
+import CEditor from "@/components/comm/editor/index";
+import CSelectMap from "@/components/comm/Map/SelectMap.vue";
+import CCity from "@/components/comm/city";
+import upload from "@/components/comm/upload/index";
+import { options } from "@/utils/config";
 export default {
-  name: 'CFormItem',
+  name: "CFormItem",
   components: {
-    'c-editor': CEditor,
-    'c-select-map': CSelectMap,
-    'c-city': CCity,
-    'c-upload': upload
+    "c-editor": CEditor,
+    "c-select-map": CSelectMap,
+    "c-city": CCity,
+    "c-upload": upload
   },
   props: {
     formItem: {
@@ -263,11 +260,11 @@ export default {
   data() {
     return {
       loading: false,
-      value: ''
+      value: ""
     };
   },
   created() {
-    if (this.formItem.type === 'select') {
+    if (this.formItem.type === "select") {
       this.popupScroll();
     }
   },
@@ -276,9 +273,21 @@ export default {
      * 设置表单控件的绑定
      */
     setDecorator(formItem) {
-      let { prop, options, rules = [], defaultValue, type, data, required, label } = formItem;
-      if (type === 'date' && defaultValue) {
-        let val = typeof defaultValue === 'number' ? new Date(defaultValue * 1000) : defaultValue;
+      let {
+        prop,
+        options,
+        rules = [],
+        defaultValue,
+        type,
+        data,
+        required,
+        label
+      } = formItem;
+      if (type === "date" && defaultValue) {
+        let val =
+          typeof defaultValue === "number"
+            ? new Date(defaultValue * 1000)
+            : defaultValue;
         defaultValue = Moment(val);
       }
       if (required) {
@@ -293,10 +302,12 @@ export default {
      * @description: 格式化data
      */
     formItemData(data) {
-      if (typeof data === 'function') {
+      if (this.formItem.selectType) {
+        return options[this.formItem.selectType];
+      } else if (typeof data === "function") {
         data = data(this.formItem);
         if (isJSON(data)) {
-          const { label = 'label', value = 'value', data: d } = data;
+          const { label = "label", value = "value", data: d } = data;
           return d.map(item => {
             return {
               label: item[label],
@@ -306,8 +317,10 @@ export default {
         }
         return data;
       } else {
-        if (this.formItem.type === 'cascader') {
-          data.forEach((item, index) => this.$set(data[index], 'isLeaf', false));
+        if (this.formItem.type === "cascader") {
+          data.forEach((item, index) =>
+            this.$set(data[index], "isLeaf", false)
+          );
         }
         return data;
       }
@@ -317,8 +330,10 @@ export default {
      * @description: 下拉滚动监听
      */
     popupScroll() {
-      if (typeof this.formItem.onScroll === 'function') {
-        const newArr = Array.isArray(this.formItem.data) ? [].concat(this.formItem) : [];
+      if (typeof this.formItem.onScroll === "function") {
+        const newArr = Array.isArray(this.formItem.data)
+          ? [].concat(this.formItem)
+          : [];
         this.formItem.onScroll(newData => {
           this.formItem.data = newArr.concat(newData);
         }, newArr);
@@ -330,13 +345,13 @@ export default {
     getInputType() {
       const { type } = this.formItem;
       switch (type) {
-        case 'password':
-          return 'password';
-        case 'number':
-          return 'number';
-        case 'input':
+        case "password":
+          return "password";
+        case "number":
+          return "number";
+        case "input":
         default:
-          return 'text';
+          return "text";
       }
     },
     /**
@@ -345,7 +360,7 @@ export default {
     setPlaceholder() {
       const { type, disabled, placeholder } = this.formItem;
       if (disabled) {
-        return '';
+        return "";
       } else if (placeholder) {
         return placeholder;
       }
@@ -355,13 +370,13 @@ export default {
      * @description: 获取默认提示语
      */
     getFixedPlaceholder(type) {
-      let str = '';
-      if (type === 'select') {
-        str = '请选择';
-      } else if (type === 'upload') {
-        str = '请上传';
+      let str = "";
+      if (type === "select") {
+        str = "请选择";
+      } else if (type === "upload") {
+        str = "请上传";
       } else {
-        str = '请输入';
+        str = "请输入";
       }
       return str + this.formItem.label;
     },
@@ -373,16 +388,20 @@ export default {
      */
     setClass(formItem) {
       const { onlyRead, prop, type } = formItem;
-      let classs = [formItem.class, 'ant-form-item-' + (prop || 'prop'), 'ant-form-item-' + (type || 'type')];
-      onlyRead && classs.push('disabled-hidden');
+      let classs = [
+        formItem.class,
+        "ant-form-item-" + (prop || "prop"),
+        "ant-form-item-" + (type || "type")
+      ];
+      onlyRead && classs.push("disabled-hidden");
       return classs;
     },
     /**
      * @description: 设置表单控件盒子类名
      */
     setFieldClass() {
-      const { align = 'bottom', layout = 'vertical', type } = this.formItem;
-      if (type === 'action') {
+      const { align = "bottom", layout = "vertical", type } = this.formItem;
+      if (type === "action") {
         return [];
       } else {
         return [`field-box--${align}`, `field-box--${layout}`];
@@ -392,7 +411,7 @@ export default {
      * 表单按钮点击事件
      */
     handelClickBtn(btnConf) {
-      this.dispatch('CForm', 'handelClickBtn', btnConf, done => {
+      this.dispatch("CForm", "handelClickBtn", btnConf, done => {
         this.setLoading(done, btnConf);
       });
     },
@@ -400,7 +419,7 @@ export default {
      * @description: 更新按钮loading状态
      */
     setLoading(done = false, btnConf) {
-      this.$set(btnConf, 'loading', done);
+      this.$set(btnConf, "loading", done);
     },
     /**
      * 格式化按钮操作列
@@ -421,10 +440,16 @@ export default {
       setTimeout(() => {
         this.value = this.getValue();
         let extraValue = undefined;
-        if (formItem.type === 'city') {
+        if (formItem.type === "city") {
           extraValue = this.$refs.city.getLabel();
         }
-        this.dispatch('CForm', 'handleChange', this.value, formItem, extraValue);
+        this.dispatch(
+          "CForm",
+          "handleChange",
+          this.value,
+          formItem,
+          extraValue
+        );
       }, 0);
     },
     /**
@@ -439,19 +464,19 @@ export default {
         },
         false
       );
-      this.dispatch('CForm', 'handleInput', value, oldValue, this.formItem);
+      this.dispatch("CForm", "handleInput", value, oldValue, this.formItem);
     },
     /**
      * @description: 上传修改回调
      */
     handleUpload(value) {
-      this.dispatch('CForm', 'handleUpload', value, this.formItem);
+      this.dispatch("CForm", "handleUpload", value, this.formItem);
     },
     /**
      * @description: 搜索
      */
     handleSearch(value) {
-      this.dispatch('CForm', 'handleSearch', value, this.formItem);
+      this.dispatch("CForm", "handleSearch", value, this.formItem);
     },
     /**
      * @description: 获取至
@@ -463,14 +488,18 @@ export default {
      * 下拉搜索
      */
     selectFilterOption(input, option) {
-      return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
     },
     /**
      * 级联选择异步数据回调
      */
     cascaderLoadData(selectedOptions) {
       const { loadData } = this.formItem;
-      if (typeof loadData === 'function') {
+      if (typeof loadData === "function") {
         const targetOption = selectedOptions[selectedOptions.length - 1];
         if (!targetOption.children) {
           loadData(targetOption, selectedOptions);
@@ -496,7 +525,7 @@ export default {
       font-size: 14px;
       font-family: SimSun, sans-serif;
       line-height: 1;
-      content: '*';
+      content: "*";
     }
   }
 }

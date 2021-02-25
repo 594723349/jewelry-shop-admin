@@ -2,9 +2,9 @@
  * @Description: 操作栏
  * @Author: cxf
  * @Date: 2020-09-01 11:33:25
- * @LastEditTime: 2021-01-25 18:51:29
+ * @LastEditTime: 2021-02-25 15:37:44
  * @LastEditors: cxf
- * @FilePath: /score-ms/src/components/comm/toolbar/toolbarItem.vue
+ * @FilePath: /jewelry-shop/jewelry-shop-admin/src/components/comm/toolbar/toolbarItem.vue
 -->
 
 <template>
@@ -22,12 +22,12 @@
       :loading="loading"
       :disabled="item.disabled"
       @click.stop="handleClick(item)"
-      >{{ item.label }}</a-button
-    >
+    >{{ item.label }}</a-button>
     <!-- 下拉 -->
     <a-select
       v-if="item.fieldType === 'select'"
       v-model="props[item.prop]"
+      :allowClear="true"
       :placeholder="item.placeholder"
       :style="{ width: item.width || '150px' }"
       :dropdownMatchSelectWidth="false"
@@ -42,8 +42,7 @@
         :key="optionIndex"
         :disabled="selectOption.disabled"
         :value="selectOption.value"
-        >{{ selectOption.label }}</a-select-option
-      >
+      >{{ selectOption.label }}</a-select-option>
     </a-select>
     <!-- 日期 -->
     <a-range-picker
@@ -62,38 +61,66 @@
       allowClear
       @search="handleSearch"
     >
-      <a-button class="search-button" type="primary" slot="enterButton" :loading="loading">{{
+      <a-button class="search-button" type="primary" slot="enterButton" :loading="loading">
+        {{
         item.label || "搜索"
-      }}</a-button>
+        }}
+      </a-button>
     </a-input-search>
+    <!-- 上传 -->
+    <template v-else-if="item.fieldType === 'upload'">
+      <c-upload
+        ref="upload"
+        :showUploadList="false"
+        :class="['toolbar-node', 'toolbar-node__' + item.fieldType]"
+        :accept="item.accept"
+        :customRequest="getCustomRequest()"
+        :multiple="item.multiple"
+        :params="item.params"
+        listType="text"
+        @end="uploadEnd"
+      >
+        <a-button
+          :class="[item.disabled && 'btn-disabled']"
+          :type="item.type || buttonType"
+          :icon="item.icon"
+          :loading="loading"
+          :disabled="item.disabled"
+        >{{ item.text || item.label }}</a-button>
+      </c-upload>
+    </template>
   </div>
 </template>
 
 <script>
 import { options } from "@/utils/config.js";
+import upload from "../upload/index";
 export default {
   name: "CToolbarItem",
+  components: {
+    "c-upload": upload
+  },
   props: {
     item: {
       type: Object,
-      required: true,
+      required: true
     },
     props: {
       type: Object,
       default: () => {
         return {};
-      },
+      }
     },
     buttonType: {
       type: String,
-      default: "orange",
-    },
+      default: "orange"
+    }
   },
   data() {
     return {
       loading: false,
       date: [],
-      options,
+      options
     };
   },
   created() {
@@ -106,7 +133,8 @@ export default {
     init() {
       const { defaultValue, fieldType } = this.item;
       if (fieldType === "date" && defaultValue) {
-        this.date = typeof defaultValue === "function" ? defaultValue() : defaultValue;
+        this.date =
+          typeof defaultValue === "function" ? defaultValue() : defaultValue;
         this.rangePickerChange(this.date);
       }
     },
@@ -136,7 +164,7 @@ export default {
       this.$emit("change", {
         value,
         index,
-        key: prop,
+        key: prop
       });
     },
     /**
@@ -146,7 +174,7 @@ export default {
     rangePickerChange(value) {
       let dates = [];
       if (!value.length) {
-        this.item.prop.forEach((key) => {
+        this.item.prop.forEach(key => {
           this.$set(this.props, key, "");
         });
       } else {
@@ -176,14 +204,14 @@ export default {
           hour: 0,
           minute: 0,
           second: 0,
-          millisecond: 0,
+          millisecond: 0
         });
       } else {
         date.set({
           hour: 23,
           minute: 59,
           second: 59,
-          millisecond: 59,
+          millisecond: 59
         });
       }
       return date;
@@ -195,7 +223,39 @@ export default {
     setLoading(flag = false) {
       this.loading = flag;
     },
-  },
+    getCustomRequest() {
+      if (typeof this.item.customRequest !== "function") {
+        return undefined;
+      } else {
+        return (data, loading) => {
+          this.setLoading(true);
+          return new Promise((resolve, reject) => {
+            this.item
+              .customRequest(data, loading, this.$refs.upload)
+              .then(res => {
+                resolve(res);
+              })
+              .catch(err => {
+                reject(err);
+              });
+          });
+        };
+      }
+    },
+    /**
+     * @description: 上传结束回调
+     */
+    uploadEnd(type, data, params, fileList) {
+      this.setLoading(false);
+      typeof this.item.callback === "function" &&
+        this.item.callback({
+          status: type,
+          result: data,
+          params: params,
+          fileList
+        });
+    }
+  }
 };
 </script>
 <style lang="less" scoped>

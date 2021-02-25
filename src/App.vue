@@ -1,10 +1,10 @@
 <!--
  * @Author: jiang chuyun
  * @Date: 2020-08-25 15:38:42
- * @LastEditTime: 2021-01-20 11:14:47
- * @LastEditors: zhyp
+ * @LastEditTime: 2021-02-25 14:13:15
+ * @LastEditors: cxf
  * @Description: 
- * @FilePath: /score-ms/src/App.vue
+ * @FilePath: /jewelry-shop/jewelry-shop-admin/src/App.vue
 -->
 <template>
   <a-config-provider :locale="zh_CN">
@@ -20,9 +20,9 @@ import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
 export default {
   data() {
     return {
-      zh_CN,
+      zh_CN
     };
-  },
+  }
 };
 </script>
 <style lang="less">
@@ -43,7 +43,7 @@ html {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-width: 1366px;
+  min-width: 1240px;
 }
 
 ul {
@@ -92,7 +92,7 @@ ul {
   .ant-input-group-wrapper {
     width: 264px;
   }
-  .ant-input-group.ant-input-group-compact  {
+  .ant-input-group.ant-input-group-compact {
     display: inline-block;
     vertical-align: middle;
     width: auto;

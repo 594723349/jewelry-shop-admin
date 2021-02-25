@@ -16,8 +16,8 @@
 
 <script>
 /* eslint-disable max-len */
-import MainHeader from './Header.vue';
-import SideMenu from './SideMenu.vue';
+import MainHeader from "./Header.vue";
+import SideMenu from "./SideMenu.vue";
 
 export default {
   data() {
@@ -40,7 +40,6 @@ export default {
 
 <style lang="less" scoped>
 .layout-container {
-  min-width: 1366px;
   height: 100%;
 
   .layout-sub-container {
